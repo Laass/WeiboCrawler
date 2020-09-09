@@ -21,8 +21,8 @@ headers = config['headers']
 # 设置代理
 proxies = config['proxies']
 
+# 博文列表
 blogList = []
-fromList = []
 
 pageIndex = startPage
 while pageIndex <= maxPage:
@@ -30,23 +30,12 @@ while pageIndex <= maxPage:
     url = 'https://s.weibo.com/weibo?q=' + "%20".join(options) + '&wvr=6&Refer=SWeibo_box&page=' + str(pageIndex)
     html = requests.get(url, headers=headers, proxies=proxies)
     soup = BeautifulSoup(html.text, 'html.parser')
-
-    # newBlogs 包含当前页面所有博文内容及用户名信息
-    newBlogs = soup.findAll('p', attrs={'class': 'txt', 'node-type': 'feed_list_content'})
-
-    # newFroms 包含每一条博文的发布时间、Url、设备信息
-    newFroms = soup.findAll('p', attrs={'class': 'from'})
-
-    # 如果在当前检索页面已经没有内容，则直接终止
+    newBlogs = soup.findAll('div', attrs={'class': 'content', 'node-type': 'like'})
+    # 如果在当前检索页面已经没有新博文，则直接终止
     if len(newBlogs) == 0:
         break
-
     blogList += newBlogs
-    fromList += newFroms
     pageIndex += 1
-
-print(len(blogList))
-print(len(fromList))
 
 # 新建一个工作薄
 wb = xlwt.Workbook()
@@ -59,6 +48,7 @@ sheet1.write(0, 2, 'BlogUrl')
 sheet1.write(0, 3, 'Time')
 sheet1.write(0, 4, 'Device')
 
+# 遍历所有博文
 for i in range(len(blogList)):
     username = ''
     content = ''
@@ -66,24 +56,44 @@ for i in range(len(blogList)):
     time = ''
     device = ''
 
-    # 获取某些博文的 nick-name 时出现 keyError，暂时未找到原因，先跳过这些博文的 nick-name
-    if 'nick-name' in blogList[i].attrs:
-        username = blogList[i].attrs['nick-name']
+    # 记录博客内容的元素
+    contentElement = None
+    # 记录博客来源信息的元素
+    fromElement = None
 
-    content = blogList[i].text
+    # 接下来要在该博文的子元素中找到 contentElement 与 fromElement
+    for aChild in blogList[i].children:
+        # 跳过空白子元素
+        if 'attrs' not in dir(aChild):
+            continue
+        # 某些博文内容较长，存在全文元素 'feed_list_content_full' 以及非全文元素 'feed_list_content'，此时需要选用全文元素
+        if 'node-type' in aChild.attrs and aChild.attrs['node-type'] == 'feed_list_content_full':
+            contentElement = aChild
+        # 如果是非全文的内容元素，并且之前没有记录过全文元素，则记录
+        elif 'node-type' in aChild.attrs and aChild.attrs['node-type'] == 'feed_list_content' and contentElement == None:
+            contentElement = aChild
+        # 如果是 from 元素，则记录
+        elif 'class' in aChild.attrs and 'from' in aChild.attrs['class']:
+            fromElement = aChild
 
-    childList = []
-    for aChild in fromList[i].children:
-        if len(str(aChild)) > 0 and str(aChild)[0] == '<':
-            childList.append(aChild)
+    username = contentElement.attrs['nick-name']
+    content = contentElement.text
 
-    blogUrl = 'https:' + str(childList[0].attrs['href'])
+    childListOfFromElement = []
 
-    time = str(childList[0].text).replace(' ', '')
+    # 接下来要在 fromElement 中找到发布时间子元素和设备信息子元素
+    for aChild in fromElement:
+        # 跳过空白子元素
+        if 'attrs' not in dir(aChild):
+            continue
+        childListOfFromElement.append(aChild)
+
+    blogUrl = 'https:' + str(childListOfFromElement[0].attrs['href'])
+    time = str(childListOfFromElement[0].text).replace(' ', '')
 
     # 某些博文没有设备信息
-    if len(childList) > 1:
-        device = childList[1].text
+    if len(childListOfFromElement) > 1:
+        device = childListOfFromElement[1].text
 
     sheet1.write(i+1, 0, username)
     sheet1.write(i+1, 1, content)
