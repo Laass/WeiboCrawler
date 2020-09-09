@@ -18,9 +18,7 @@
 
 6、在 Request Headers 中找到 `Cookie` 和 `User-Agent` 字段，复制到 `config.json` 里的 `headers` 中
 
-![](./screenshots/cookie.png)
-
-![](./screenshots/user-agent.png)
+![](./screenshots/headers.png)
 
 7、如果位于腾讯内网，则需要在 `config.json` 中设置如下代理（默认已设置）：
 ```
