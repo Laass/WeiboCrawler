@@ -1,21 +1,25 @@
 import requests
-from bs4 import BeautifulSoup
 import xlwt
+import json
 
-# 检索起始页和最大页
-startPage = 1
-maxPage = 50
+from bs4 import BeautifulSoup
 
+# 载入配置文件
+with open('./config.json', 'r', encoding='utf-8') as configFile:
+    config = json.load(configFile)
+
+# 检索起始页码和最大页码
+startPage = config['startPage']
+maxPage = config['maxPage']
 
 # 检索关键字
-# options = ['腾讯会议', '卡', '热', '电']
-options = ['腾讯']
+options = config['options']
 
 # HTTP 请求头
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36',
-    'Cookie': 'SINAGLOBAL=5530116431946.579.1598008684649; UOR=,,login.sina.com.cn; _s_tentry=login.sina.com.cn; Apache=4805368567449.919.1599619236716; ULV=1599619236780:9:7:6:4805368567449.919.1599619236716:1599563553506; login_sid_t=672b8a3d051b13446bd7aba308de3e49; cross_origin_proto=SSL; ALF=1631155442; SSOLoginState=1599619443; SCF=Ap4t2IOhQCYT5mSe6VDfof3YgYuFVWKy1KXLix8xQ0vks8WC-TYaxE85Dk87yMYXcAyaW66wOyWqHba5GXJ7BkI.; SUB=_2A25yXDEjDeRhGeNI7VQZ9y7KyzyIHXVRKCXrrDV8PUNbmtANLVPQkW9NSFeDTHgfum6fPblHzafmormPKZDHanUI; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWAbREemV7B2HqNo2rJblYS5JpX5KzhUgL.Fo-cSoqRS05ceh52dJLoIpjLxKqLBoBLB-2LxKqLB.BL1hMLxK-LBKBLBK.t; SUHB=06ZFUY3b8SgLjH; wvr=6; webim_unReadCount=%7B%22time%22%3A1599619750004%2C%22dm_pub_total%22%3A0%2C%22chat_group_client%22%3A0%2C%22chat_group_notice%22%3A0%2C%22allcountNum%22%3A0%2C%22msgbox%22%3A0%7D'
-}
+headers = config['headers']
+
+# 设置代理
+proxies = config['proxies']
 
 blogList = []
 fromList = []
@@ -24,7 +28,7 @@ pageIndex = startPage
 while pageIndex <= maxPage:
     print('page = ' + str(pageIndex))
     url = 'https://s.weibo.com/weibo?q=' + "%20".join(options) + '&wvr=6&Refer=SWeibo_box&page=' + str(pageIndex)
-    html = requests.get(url, headers=headers)
+    html = requests.get(url, headers=headers, proxies=proxies)
     soup = BeautifulSoup(html.text, 'html.parser')
 
     # 这些 HTML 元素包含

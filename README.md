@@ -12,17 +12,25 @@
 
 4、在微博搜索框中输入任意关键字，进行一次搜索
 
-5、在开发者工具中，依次选择 Network -> Name(按名称排序) -> weibo?q=%...（如果没有找到类似于该名称的资源，就再进行一次微博搜索，直到该名称的资源出现为止）
+5、在开发者工具中，依次选择 Network -> Name(按名称排序) -> weibo?q=%...（如果没有找到类似于该名称的资源，就换个关键字再搜索一次，直出现为止）
 
 ![](./screenshots/请求.png)
 
-6、在 Request Headers 中找到 Cookie 和 User-Agent 字段，分别复制到 `main.py` 里的 headers 的对应字段中
+6、在 Request Headers 中找到 `Cookie` 和 `User-Agent` 字段，复制到 `config.json` 里的 `headers` 中
 
 ![](./screenshots/cookie.png)
 
 ![](./screenshots/user-agent.png)
 
-7、在 `main.py` 的 option 变量中加入自己想要检索的关键字，然后执行 `main.py`，便可以模拟浏览器登录状态进行微博内容爬取了。爬取完毕后会在项目目录下生成一个 excel 文件
+7、如果位于腾讯内网，则需要在 `config.json` 中设置如下代理（默认已设置）：
+```
+  "proxies" : {
+    "http": "127.0.0.1:12639",
+    "https": "127.0.0.1:12639"
+  }
+```
+
+8、在 `config.json` 的 `options` 中加入自己想要检索的关键字，然后执行 `main.py`，便可以模拟浏览器登录状态进行微博内容爬取了。爬取完毕后会在项目目录下生成一个 excel 文件
 
 ## 页面元素分析
 查看微博检索页面的源代码，可以发现检索到的每一条博文一般具有以下固定的格式：

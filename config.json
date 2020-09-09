@@ -1,0 +1,14 @@
+{
+  "options" : ["腾讯会议", "卡", "热", "电"],
+  "startPage" : 1,
+  "maxPage" : 50,
+  "headers" : {
+    "Connection": "close",
+    "User-Agent": "",
+    "Cookie": ""
+  },
+  "proxies" : {
+    "http": "127.0.0.1:12639",
+    "https": "127.0.0.1:12639"
+  }
+}
