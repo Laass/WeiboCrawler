@@ -21,6 +21,8 @@ headers = config['headers']
 # 设置代理
 if 'proxies' in config:
     proxies = config['proxies']
+else:
+    proxies = {}
 
 # 博文列表
 blogList = []
