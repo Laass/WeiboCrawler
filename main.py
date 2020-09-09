@@ -31,8 +31,10 @@ while pageIndex <= maxPage:
     html = requests.get(url, headers=headers, proxies=proxies)
     soup = BeautifulSoup(html.text, 'html.parser')
 
-    # 这些 HTML 元素包含
+    # newBlogs 包含当前页面所有博文内容及用户名信息
     newBlogs = soup.findAll('p', attrs={'class': 'txt', 'node-type': 'feed_list_content'})
+
+    # newFroms 包含每一条博文的发布时间、Url、设备信息
     newFroms = soup.findAll('p', attrs={'class': 'from'})
 
     # 如果在当前检索页面已经没有内容，则直接终止
@@ -46,8 +48,11 @@ while pageIndex <= maxPage:
 print(len(blogList))
 print(len(fromList))
 
+# 新建一个工作薄
 wb = xlwt.Workbook()
 sheet1 = wb.add_sheet('sheet1', cell_overwrite_ok=True)  # cell_overwrite_ok=true 使同一个单元可以重设值
+
+# 统计的内容如下：
 sheet1.write(0, 0, 'Username')
 sheet1.write(0, 1, 'Content')
 sheet1.write(0, 2, 'BlogUrl')
@@ -61,7 +66,7 @@ for i in range(len(blogList)):
     time = ''
     device = ''
 
-    # 获取某些博文的 nick-name 时出现 keyError，暂时未找到原因，先跳过这些博文
+    # 获取某些博文的 nick-name 时出现 keyError，暂时未找到原因，先跳过这些博文的 nick-name
     if 'nick-name' in blogList[i].attrs:
         username = blogList[i].attrs['nick-name']
 
