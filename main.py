@@ -36,6 +36,7 @@ while pageIndex <= maxPage:
     newBlogs = soup.findAll('div', attrs={'class': 'content', 'node-type': 'like'})
     # 如果在当前检索页面已经没有新博文，则直接终止
     if len(newBlogs) == 0:
+        print('no more content on page ' + str(pageIndex))
         break
     blogList += newBlogs
     pageIndex += 1
