@@ -1,5 +1,5 @@
 {
-  "options" : ["腾讯会议", "卡", "热", "电"],
+  "keywords" : ["腾讯会议", "卡", "热", "电"],
   "startPage" : 1,
   "maxPage" : 50,
   "headers" : {
@@ -7,8 +7,5 @@
     "User-Agent": "",
     "Cookie": ""
   },
-  "proxies" : {
-    "http": "http://127.0.0.1:12639",
-    "https": "http://127.0.0.1:12639"
-  }
+  "proxies" : {}
 }

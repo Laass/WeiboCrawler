@@ -13,7 +13,7 @@ startPage = config['startPage']
 maxPage = config['maxPage']
 
 # 检索关键字
-options = config['options']
+keywords = config['keywords']
 
 # HTTP 请求头
 headers = config['headers']
@@ -30,7 +30,7 @@ blogList = []
 pageIndex = startPage
 while pageIndex <= maxPage:
     print('page = ' + str(pageIndex))
-    url = 'https://s.weibo.com/weibo?q=' + "%20".join(options) + '&wvr=6&Refer=SWeibo_box&page=' + str(pageIndex)
+    url = 'https://s.weibo.com/weibo?q=' + "%20".join(keywords) + '&wvr=6&Refer=SWeibo_box&page=' + str(pageIndex)
     html = requests.get(url, headers=headers, proxies=proxies)
     soup = BeautifulSoup(html.text, 'html.parser')
     newBlogs = soup.findAll('div', attrs={'class': 'content', 'node-type': 'like'})
@@ -105,4 +105,4 @@ for i in range(len(blogList)):
     sheet1.write(i+1, 3, time)
     sheet1.write(i+1, 4, device)
 
-wb.save('./' + '_'.join(options) + '.xls')
+wb.save('./' + '_'.join(keywords) + '.xls')
