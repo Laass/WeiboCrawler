@@ -45,7 +45,7 @@ while pageIndex <= maxPage:
 wb = xlwt.Workbook()
 sheet1 = wb.add_sheet('sheet1', cell_overwrite_ok=True)  # cell_overwrite_ok=true 使同一个单元可以重设值
 
-# 统计的内容如下：
+# 表头
 sheet1.write(0, 0, 'Username')
 sheet1.write(0, 1, 'Content')
 sheet1.write(0, 2, 'BlogUrl')
