@@ -16,26 +16,18 @@
 
 ![](./screenshots/请求.png)
 
-6、在 Request Headers 中找到 `Cookie` 和 `User-Agent` 字段，复制到 `config.json` 里的 `headers` 中
+6、在 Request Headers 中找到 `Cookie` 和 `User-Agent` 字段，复制到 `config.json` 里的 `headers` 中，以模拟登录态
 
 ![](./screenshots/headers.png)
 
-7、如果位于腾讯内网，则需要在 `config.json` 中设置如下代理（默认未设置）：
-```
-  "proxies" : {
-    "http": "http://127.0.0.1:12639",
-    "https": "http://127.0.0.1:12639"
-  }
-```
-
-8、在 `config.json` 的 `keywords` 中加入自己想要检索的关键字，然后执行 `main.py`，便可以模拟浏览器登录状态进行微博内容爬取了。爬取完毕后会在项目目录下生成一个 excel 文件
+7、在 `config.json` 的 `keywords` 中加入自己想要检索的关键字，然后执行 `main.py`，便可以模拟浏览器登录状态进行微博内容爬取了。爬取完毕后会在项目目录下生成一个 excel 文件
 
 ## config.json 各字段解释
 * keywords：微博检索的关键字
 * startPage：爬取起始页页码
 * maxPage：爬取的最大页码，不爬取超过此页码的内容
 * headers：HTTP 请求头的内容，包含 `Connection`、`User-Agent`、`Cookie`
-* proxies：HTTP 网络代理。若处于腾讯内网，则需要设置为 `127.0.0.1:12639`
+* proxies：HTTP 网络代理，默认未设置
 
 ## 页面元素分析
 查看微博检索页面的源代码，可以发现检索到的每一条博文一般具有以下固定的格式：
